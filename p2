@@ -1,0 +1,54 @@
+import numpy as np
+import matplotlib.pyplot as plt
+def x(t):
+    return (abs(t) < 5).astype(float)*(np.sin(2*np.pi*t)+2*np.cos(2*np.pi*2*t)+3*np.cos(2*np.pi*4*t))
+def Fourier(x,t,f):
+    Y = np.zeros(len(f), dtype = complex)
+    dt =(t[-1]-t[0])/len(t)
+    for i, f1 in enumerate(f):
+      Y[i] = np.dot(x(t),np.exp(-2*np.pi*1.j*f1*t))
+    return Y*dt
+
+def Fourier_Inversa(X,t,f):
+    Y = np.zeros(len(t), dtype = complex)
+    df =(f[-1]-f[0])/len(f)
+    for i, t1 in enumerate(t):
+      Y[i] = np.dot(X,np.exp(2*np.pi*1.j*f*t1))
+    return Y*df
+
+t = np.linspace(-10,10,1000)
+f = np.linspace(-10,10,1000)
+
+X = Fourier(x,t,f)
+X[0:440]=0
+X[-440:-1]=0
+
+fig=plt.figure(figsize=(12,4), dpi= 100)
+ax = fig.add_subplot(111)
+plt.plot(t, x(t))
+ax.set_xlabel('t', fontsize=18)
+ax.set_ylabel('x(t)', fontsize=18)
+plt.grid()
+
+fig=plt.figure(figsize=(12,4), dpi= 100)
+ax = fig.add_subplot(111)
+ax.plot(f, np.real(X),'-b',label='Parte Real')
+ax.plot(f, np.imag(X),'--g',label='Parte Imaginaria')
+plt.grid()
+plt.legend()
+plt.title('Transformada de Fourier Numérica', fontsize=18)
+ax.set_xlabel('f', fontsize=18)
+ax.set_ylabel('X(f)', fontsize=18)
+plt.show()
+
+fig=plt.figure(figsize=(12,4), dpi= 100)
+ax = fig.add_subplot(111)
+ax.plot(t, np.real(Fourier_Inversa(X,t,f)),'-b',label='Parte Real')
+ax.plot(t, np.imag(Fourier_Inversa(X,t,f)),'--g',label='Parte Imaginaria')
+plt.grid()
+plt.legend()
+plt.title('Transformada Inversa de Fourier Numérica', fontsize=18)
+ax.set_xlabel('t', fontsize=18)
+ax.set_ylabel('x(t)', fontsize=18)
+plt.show()
+
