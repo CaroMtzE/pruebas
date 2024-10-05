@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+from scipy.fftpack import fft 
+import numpy as np
+
+datosvibraciones=pd.read_csv('valores vibracion.csv' , header=0)
+
+x = datosvibraciones[' Z (m/s2)']
+
+t = datosvibraciones['Time (s)']
+plt.subplot(2,1,1)
+plt.plot(t,x)
+plt.xlabel('Time')
+plt.ylabel('Magnitude')
+
+X= fft(x) 
+
+new_X = np.delete(X, 0)
+print(type(X))
+
+plt.subplot(2,1,2)
+plt.plot(abs(new_X))
+
+plt.show()
